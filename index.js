@@ -15,13 +15,13 @@ app.use(express.json());
 
 app.put('/done', async (req, res) => {
     const id = req.headers.id;
-    console.log(id);
+    // console.log(id);
     const todo = await Schema.findOne({_id: id});
-    console.log(todo);
+    // console.log(todo);
     todo.isDone = !todo.isDone; // Toggle the value of isDone
-    console.log(todo);
+    // console.log(todo);
     await todo.save(); // Save the updated todo
-    console.log(todo);
+    // console.log(todo);
     res.json({
         msg: "Success"
     });
@@ -45,7 +45,32 @@ app.put('/deletetodo', async (req,res)=>{
 
 })
 
-app.post('/addtodo', (req, res)=>{
+function verifyTodo(req, res, next){
+    const title = req.body.title;
+    const description = req.body.description;
+
+    const titleS = zod.string().trim().min(2);
+    const descS = zod.string().trim().min(2);
+
+    const result = titleS.safeParse(title);
+    const resultDesc = descS.safeParse(description);
+//    console.log(result.success);
+    if(!result.success){
+     return    res.status(403).json({
+            msg: "Minimum 2 characters required in title"
+        })
+    }
+    if(!resultDesc.success){
+      return   res.status(403).json({
+            msg: "Minimum 2 characters required in description"
+        })
+    }
+    
+    next();
+
+}
+
+app.post('/addtodo', verifyTodo, (req, res)=>{
     const title = req.body.title;
     const description = req.body.description;
     const isDone = false;
