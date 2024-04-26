@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const port = 3001;
 const zod = require('zod');
@@ -83,7 +84,7 @@ app.post('/addtodo', verifyTodo, (req, res)=>{
     })
 })
 
-app.listen(port, (req,res)=>{
+app.listen(process.env.PORT, (req,res)=>{
     console.log("deployed");
 })
 
