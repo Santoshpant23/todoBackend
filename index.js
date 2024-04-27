@@ -84,7 +84,7 @@ app.post('/addtodo', verifyTodo, (req, res)=>{
     })
 })
 
-app.listen(process.env.PORT, (req,res)=>{
+app.listen(3001, (req,res)=>{
     console.log("deployed");
 })
 
